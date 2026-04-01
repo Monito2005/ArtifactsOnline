@@ -9,3 +9,6 @@ spring:
 api:
   endpoint:
     base-url: /api/v1
+jwt:
+  secret-key: change-this-secret-key-change-this-secret-key
+  expiration-seconds: 3600
