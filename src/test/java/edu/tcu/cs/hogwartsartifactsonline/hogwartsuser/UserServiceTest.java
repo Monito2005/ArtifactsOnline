@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,14 @@ class UserServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    PasswordEncoder passwordEncoder;
+
+
     @InjectMocks
     UserService userService;
+
+
 
     List<HogwartsUser> hogwartsUsers;
 
@@ -130,6 +137,7 @@ class UserServiceTest {
         newUser.setEnabled(true);
         newUser.setRoles("user");
 
+        given(this.passwordEncoder.encode("123456")).willReturn("encoded-password");
         given(this.userRepository.save(newUser)).willReturn(newUser);
 
         // When
@@ -137,9 +145,10 @@ class UserServiceTest {
 
         // Then
         assertThat(returnedUser.getUsername()).isEqualTo(newUser.getUsername());
-        assertThat(returnedUser.getPassword()).isEqualTo(newUser.getPassword());
+        assertThat(returnedUser.getPassword()).isEqualTo("encoded-password");
         assertThat(returnedUser.isEnabled()).isEqualTo(newUser.isEnabled());
         assertThat(returnedUser.getRoles()).isEqualTo(newUser.getRoles());
+        verify(this.passwordEncoder, times(1)).encode("123456");
         verify(this.userRepository, times(1)).save(newUser);
     }
 
