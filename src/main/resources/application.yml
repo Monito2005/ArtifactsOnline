@@ -12,3 +12,6 @@ api:
 jwt:
   secret-key: change-this-secret-key-change-this-secret-key
   expiration-seconds: 3600
+server:
+  port: 80
+
